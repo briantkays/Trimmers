@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Precision Trimmers Barbershop</title>
+<style>
+:root{--bg:#faf7f2;--card:#fff;--ink:#1c1c1c;--mute:#6b6b6b;--line:#e4ded3;--acc:#c8862a;--accink:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#141414;--card:#1f1f1f;--ink:#f2efe9;--mute:#9a9a9a;--line:#333;--acc:#e0a040;--accink:#141414}}
+*{box-sizing:border-box}
+body{margin:0 auto;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;max-width:480px;padding:16px 16px 100px}
+h1{font-size:22px;margin:0}h2{font-size:18px;margin:18px 0 10px}
+.sub,.meta{color:var(--mute);font-size:14px}.meta{font-size:13px}
+.steps{display:flex;gap:6px;margin:12px 0 4px}.steps i{flex:1;height:4px;border-radius:2px;background:var(--line)}.steps i.on{background:var(--acc)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;display:flex;align-items:center;gap:12px;cursor:pointer;width:100%;text-align:left;color:var(--ink);font:inherit}
+.card.sel{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
+.ico{width:46px;height:46px;border-radius:12px;background:var(--line);display:grid;place-items:center;font-size:22px;flex:none;font-size:15px}
+.grow{flex:1}.name{font-weight:600}.price{font-weight:700}
+.row{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;flex-wrap:wrap}
+.chip{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:10px 12px;text-align:center;font:inherit;cursor:pointer;min-width:62px}
+.chip.sel{background:var(--acc);color:var(--accink);border-color:var(--acc)}
+.chip.off{opacity:.35;text-decoration:line-through;cursor:not-allowed}
+.scroll{flex-wrap:nowrap}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:12px 16px;display:flex;gap:10px;max-width:480px;margin:0 auto}
+.bar:empty{display:none}
+button.main{flex:1;background:var(--acc);color:var(--accink);border:0;border-radius:12px;padding:14px;font:inherit;font-weight:700;cursor:pointer}
+button.main:disabled{opacity:.4}
+button.ghost{background:none;border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:14px 16px;font:inherit;cursor:pointer}
+.sum{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;font-size:14px}
+.sum div{display:flex;justify-content:space-between;padding:4px 0}
+.list{margin:8px 0 0;padding:0;list-style:none}.list li{padding:8px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:14px}
+.in{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:inherit;margin-bottom:8px}
+.err{color:#c0392b;font-size:13px;min-height:16px}.note{font-size:12px;color:var(--mute);margin-top:10px;text-align:center}
+.ok{font-size:44px;text-align:center}a{color:var(--acc)}
+.btn{display:inline-block;text-decoration:none;padding:12px 18px;border-radius:12px;background:var(--acc);color:var(--accink);font-weight:700}
+.s{font-size:12px;padding:6px 10px;min-width:0;margin:2px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="bar" id="bar"></div>
+<script>
+// ===== SETTINGS =====
+var API="https://rmcluwrnuashlnkwcriv.supabase.co",KEY="sb_publishable_HKts_qYpXki-F8UExLg_LA_lW1BF6Ol";
+var SHOP="Precision Trimmers Barbershop",WA="27634762775",EMAIL="briantkays@gmail.com";
+var RATE=null; // put today's ZiG per 1 USD here to switch on the USD/ZiG button
+var FANCY=3;
+var S=[["Low cut",1,"💈"],["Brush cut",1,"🪮"],["English cut",1,"✂️"],["Fade",FANCY,"💈"],["Flat top",FANCY,"📐"],["Waves",FANCY,"🌊"],["Mohawk",FANCY,"🦅"],["Twists + fade",FANCY,"🌀"],["Dreads + fade",FANCY,"〰️"],["Design cut (lines)",FANCY,"🎨"],["Shape-up only",0.5,"📏"],["Shape-up + beard",1,"🧔"],["Beard only",1,"🧔"],["Kids cut",1,"👦"],["Kids design (Nike etc.)",2,"⭐"]];
+var R=[{k:0,t:"Just once"},{k:1,t:"Every week"},{k:2,t:"Every 2 weeks"},{k:3,t:"Every 3 weeks"},{k:4,t:"Every 4 weeks"}];
+var PAY=["Cash","EcoCash","OneMoney"];
+// ===== HELPERS =====
+function pad(n){return n<10?"0"+n:""+n}
+var T=[];for(var h=8;h<18;h++){T.push(pad(h)+":00");T.push(pad(h)+":30")}
+var DN=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],MN=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function iso(x){return x.getFullYear()+"-"+pad(x.getMonth()+1)+"-"+pad(x.getDate())}
+function addDays(x,n){var y=new Date(x);y.setDate(y.getDate()+n);return y}
+function today(){var x=new Date();x.setHours(0,0,0,0);return x}
+function fmt(x){return DN[x.getDay()]+" "+x.getDate()+" "+MN[x.getMonth()]}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+var cur="USD";
+function M(u){return cur=="ZiG"&&RATE?"ZiG "+(u*RATE).toFixed(2):"$"+u.toFixed(2)}
+var tok=null;try{tok=sessionStorage.getItem("tok")}catch(e){}
+function api(path,o){o=o||{};var h={apikey:KEY,"Content-Type":"application/json"};if(tok)h.Authorization="Bearer "+tok;if(o.prefer)h.Prefer=o.prefer;return fetch(API+path,{method:o.m||"GET",headers:h,body:o.b?JSON.stringify(o.b):undefined})}
+var $=function(id){return document.getElementById(id)};
+// ===== CLIENT =====
+var st={step:0,s:null,d:1,t:null,r:2,c:4,pay:null},nm="",ph="",err="",busy={},offline=false,ref="",sending=false;
+async function loadTaken(){try{var r=await api("/rest/v1/rpc/taken_slots",{m:"POST",b:{d_from:iso(today()),d_to:iso(addDays(today(),220))}});if(!r.ok)throw 0;busy={};(await r.json()).forEach(function(x){busy[x.slot_date+"|"+String(x.slot_time).slice(0,5)]=1});offline=false}catch(e){offline=true}}
+function dates(){var w=R[st.r].k,n=w?st.c:1,a=[];for(var i=0;i<n;i++)a.push(addDays(addDays(today(),st.d),i*w*7));return a}
+function conflicts(){return st.t?dates().filter(function(x){return busy[iso(x)+"|"+st.t]}):[]}
+function steps(){var h="<div class='steps'>";for(var i=0;i<4;i++)h+="<i class='"+(i<=st.step?"on":"")+"'></i>";return h+"</div>"}
+function go(n){st.step=n;err="";render();scrollTo(0,0)}
+function pickS(i){st.s=i;render()}function pickD(i){st.d=i;st.t=null;render()}function pickT(i){st.t=T[i];render()}
+function pickR(i){st.r=i;render()}function pickC(n){st.c=n;render()}function pickP(i){st.pay=PAY[i];err="";render()}
+function cut(){return(RATE?"<div style='text-align:right'><button class='chip s' onclick=\"cur=cur=='USD'?'ZiG':'USD';render()\">Prices in "+cur+" ⇄</button></div>":"")}
+function render(){
+if(location.hash=="#barber"){return barberView()}
+var a=$("app"),b=$("bar"),h="";
+if(st.step==0){h="<h1>"+SHOP+"</h1><p class='sub'>Book your cut in under a minute</p>"+cut()+steps()+"<h2>Choose your style</h2>"+S.map(function(s,i){return "<button class='card"+(st.s===i?" sel":"")+"' onclick='pickS("+i+")'><div class='ico'>"+s[2]+"</div><div class='grow name'>"+s[0]+"</div><div class='price'>"+M(s[1])+"</div></button>"}).join("");
+b.innerHTML="<button class='main' "+(st.s===null?"disabled":"")+" onclick='go(1)'>Next: pick a time</button>"}
+if(st.step==1){var c=conflicts();
+h=steps()+"<h2>Pick a day</h2><div class='row scroll'>"+[1,2,3,4,5,6,7,8,9,10,11,12,13,14].map(function(i){var x=addDays(today(),i),off=x.getDay()==0;return "<button class='chip"+(st.d==i?" sel":"")+(off?" off":"")+"' "+(off?"":"onclick='pickD("+i+")'")+">"+DN[x.getDay()]+"<br><b>"+x.getDate()+"</b><br>"+MN[x.getMonth()]+"</button>"}).join("")+"</div><p class='meta'>Closed on Sundays.</p><h2>Time</h2>"+(offline?"<p class='err'>Can’t load times. Check your internet and refresh.</p>":"")+"<div class='grid'>"+T.map(function(t,i){var o=busy[iso(addDays(today(),st.d))+"|"+t];return "<button class='chip"+(st.t==t?" sel":"")+(o?" off":"")+"' "+(o?"":"onclick='pickT("+i+")'")+">"+t+"</button>"}).join("")+"</div>"+
+"<h2>Do you cut on a timetable?</h2><p class='sub'>Regulars: lock in your next cuts so your slot is always yours.</p><div class='row'>"+R.map(function(r,i){return "<button class='chip"+(st.r==i?" sel":"")+"' onclick='pickR("+i+")'>"+r.t+"</button>"}).join("")+"</div>"+
+(st.r?"<h2>How many cuts to book?</h2><div class='row'>"+[2,4,6,8].map(function(n){return "<button class='chip"+(st.c==n?" sel":"")+"' onclick='pickC("+n+")'>"+n+" cuts</button>"}).join("")+"</div>":"");
+if(st.t){h+="<h2>Your schedule</h2><div class='sum'><ul class='list' style='margin:0'>"+dates().map(function(x,i){var bad=busy[iso(x)+"|"+st.t];return "<li><span>"+(i+1)+". "+fmt(x)+"</span><span>"+st.t+(bad?" ⚠ taken":"")+"</span></li>"}).join("")+"</ul></div>"+(c.length?"<p class='err'>One of these dates is already taken. Pick another time or fewer cuts.</p>":"")}
+b.innerHTML="<button class='ghost' onclick='go(0)'>Back</button><button class='main' "+(st.t&&!c.length?"":"disabled")+" onclick='go(2)'>Next: your details</button>"}
+if(st.step==2){var n=dates().length,s=S[st.s];
+h=steps()+"<h2>Confirm your booking</h2><div class='sum'><div><span>"+s[0]+"</span><span>"+M(s[1])+" × "+n+"</span></div><div><span>Total (paid at the shop)</span><b>"+M(s[1]*n)+"</b></div></div><h2>Your details</h2><input class='in' id='nm' placeholder='Your name' value='"+esc(nm)+"' oninput='nm=this.value'><input class='in' id='ph' type='tel' placeholder='WhatsApp number with country code, e.g. 263771234567' value='"+esc(ph)+"' oninput='ph=this.value'><h2>How will you pay after your cut?</h2>"+PAY.map(function(p,i){return "<button class='card"+(st.pay==p?" sel":"")+"' onclick='pickP("+i+")'><div class='ico'>"+(p=="Cash"?"💵":"📱")+"</div><div class='grow name'>"+p+"</div></button>"}).join("")+"<p class='meta'>You pay at the shop after your cut. Nothing is charged online.</p><p class='err'>"+err+"</p>";
+b.innerHTML="<button class='ghost' onclick='go(1)'>Back</button><button class='main' "+(sending?"disabled":"")+" onclick='book()'>"+(sending?"Booking…":"Confirm booking")+"</button>"}
+if(st.step==3){var s=S[st.s],ds=dates(),msg=encodeURIComponent("Hi, I booked at "+SHOP+": "+s[0]+"\n"+ds.map(function(x){return fmt(x)+" "+st.t}).join("\n")+"\nName: "+nm+"\nRef "+ref);
+h=steps()+"<div class='ok'>✅</div><h1 style='text-align:center'>You’re booked"+(nm?", "+esc(nm.split(" ")[0]):"")+"!</h1><p class='sub' style='text-align:center'>"+s[0]+" · pay "+st.pay+" at the shop · Ref "+ref+"</p><div class='sum'><b>Your cuts</b><ul class='list'>"+ds.map(function(x){return "<li><span>"+fmt(x)+"</span><span>"+st.t+"</span></li>"}).join("")+"</ul></div><p style='text-align:center;margin-top:16px'><a class='btn' target='_blank' href='https://wa.me/"+WA+"?text="+msg+"'>Send to the shop on WhatsApp</a></p><p class='note'>Tap the button so the barber also gets your booking.</p>";
+b.innerHTML="<button class='main' onclick='st={step:0,s:null,d:1,t:null,r:2,c:4,pay:null};render()'>Book another</button>"}
+a.innerHTML=h+"<p class='note'><a href='#barber'>Barber login</a></p>"}
+async function book(){err="";var p=ph.replace(/[ \-()]/g,"");
+if(!nm.trim()){err="Please enter your name.";return render()}
+if(!/^\+?[1-9][0-9]{9,14}$/.test(p)){err="Enter your WhatsApp number with country code (no leading 0).";return render()}
+if(!st.pay){err="Choose how you will pay.";return render()}
+sending=true;render();ref="PT"+Math.floor(1000+Math.random()*9000);var s=S[st.s];
+var rows=dates().map(function(x){return{ref:ref,name:nm.trim(),phone:p.replace("+",""),style:s[0],price:s[1],pay:st.pay,slot_date:iso(x),slot_time:st.t,series:ref}});
+try{var r=await api("/rest/v1/bookings",{m:"POST",b:rows,prefer:"return=minimal"});sending=false;
+if(r.ok){return go(3)}
+await loadTaken();if(r.status==409){err="Sorry, one of those times was just taken. Please pick another.";st.t=null;return go(1)}
+err="Could not save your booking. Please try again.";render()}catch(e){sending=false;err="No internet. Please try again.";render()}}
+// ===== BARBER =====
+var bd=today(),bk=[],bl=[];
+async function doLogin(){tok=null;var r=await api("/auth/v1/token?grant_type=password",{m:"POST",b:{email:$("em").value.trim(),password:$("pw").value}});
+if(r.ok){tok=(await r.json()).access_token;try{sessionStorage.setItem("tok",tok)}catch(e){}err="";barberLoad()}else{err="Wrong email or password.";barberView()}}
+function logout(){tok=null;try{sessionStorage.removeItem("tok")}catch(e){}barberView()}
+async function barberLoad(){var d=iso(bd);try{var r1=await api("/rest/v1/bookings?slot_date=eq."+d+"&status=eq.booked&order=slot_time",{}),r2=await api("/rest/v1/blocked?slot_date=eq."+d,{});
+if(r1.status==401||r2.status==401){err="Session ended. Log in again.";return logout()}
+bk=await r1.json();bl=await r2.json()}catch(e){bk=[];bl=[];err="No internet."}barberView()}
+function barberView(){var a=$("app"),b=$("bar");b.innerHTML="";
+if(!tok){a.innerHTML="<h1>Barber login</h1><p class='sub'>"+SHOP+"</p><input class='in' id='em' type='email' value='"+EMAIL+"'><input class='in' id='pw' type='password' placeholder='Password'><p class='err'>"+err+"</p><button class='main' style='width:100%' onclick='doLogin()'>Log in</button><p class='note'><a href='#' onclick=\"location.hash='';return true\">Back to booking page</a></p>";return}
+var exp=0,col=0;bk.forEach(function(x){exp+=+x.price;if(x.paid)col+=+x.price});
+var by={};bk.forEach(function(x){by[String(x.slot_time).slice(0,5)]=x});var bb={};bl.forEach(function(x){bb[String(x.slot_time).slice(0,5)]=x});
+a.innerHTML="<h1>Bookings</h1><div style='display:flex;align-items:center;gap:8px;margin:10px 0'><button class='chip s' onclick='nav(-1)'>‹</button><b class='grow' style='text-align:center'>"+fmt(bd)+(iso(bd)==iso(today())?" (today)":"")+"</b><button class='chip s' onclick='nav(1)'>›</button><button class='chip s' onclick='bd=today();barberLoad()'>Today</button></div>"+
+"<div class='sum'><div><span>Clients</span><b>"+bk.length+"</b></div><div><span>Expected</span><b>$"+exp.toFixed(2)+"</b></div><div><span>Marked paid</span><b>$"+col.toFixed(2)+"</b></div></div><p class='err'>"+err+"</p>"+
+(bk.length?"":"<p class='sub'>No bookings this day.</p>")+bk.map(function(x){return "<div class='card' style='cursor:default;flex-wrap:wrap'><div class='ico'>"+esc(String(x.slot_time).slice(0,5))+"</div><div class='grow'><div class='name'>"+esc(x.name)+"</div><div class='meta'>"+esc(x.style)+" · $"+(+x.price).toFixed(2)+" · "+esc(x.pay)+(x.series&&x.series!=""?" · regular":"")+"</div></div><div>"+(x.paid?"✅ paid":"")+"</div><div style='width:100%'>"+(x.paid?"":"<button class='chip s' onclick=\"paid('"+x.id+"')\">Mark paid</button>")+"<a class='chip s' style='display:inline-block;text-decoration:none' target='_blank' href='https://wa.me/"+esc(x.phone)+"'>WhatsApp</a><button class='chip s' onclick=\"cancelB('"+x.id+"')\">Cancel</button></div></div>"}).join("")+
+"<h2>Block times</h2><p class='meta'>Tap a free time to block it. Tap a blocked time to open it again.</p><div class='grid'>"+T.map(function(t){return by[t]?"<button class='chip off' disabled>"+t+"</button>":bb[t]?"<button class='chip sel' onclick=\"unblock('"+bb[t].id+"')\">"+t+" ✕</button>":"<button class='chip' onclick=\"blockT('"+t+"')\">"+t+"</button>"}).join("")+"</div><p style='margin-top:12px'><button class='ghost' onclick='blockDay()'>Block whole day</button> <button class='ghost' onclick='logout()'>Log out</button></p><p class='note'><a href='#' onclick=\"location.hash='';return true\">Open client booking page</a></p>"}
+function nav(n){bd=addDays(bd,n);barberLoad()}
+async function act(p,o){var r=await api(p,o);if(r.status==401){err="Session ended. Log in again.";return logout()}if(!r.ok&&r.status!=409)err="Something went wrong. Try again.";barberLoad()}
+function paid(id){act("/rest/v1/bookings?id=eq."+id,{m:"PATCH",b:{paid:true},prefer:"return=minimal"})}
+function cancelB(id){if(confirm("Cancel this booking?"))act("/rest/v1/bookings?id=eq."+id,{m:"PATCH",b:{status:"cancelled"},prefer:"return=minimal"})}
+function blockT(t){act("/rest/v1/blocked",{m:"POST",b:[{slot_date:iso(bd),slot_time:t}],prefer:"return=minimal"})}
+function unblock(id){act("/rest/v1/blocked?id=eq."+id,{m:"DELETE"})}
+function blockDay(){if(confirm("Block every free time on this day?"))act("/rest/v1/blocked",{m:"POST",b:T.map(function(t){return{slot_date:iso(bd),slot_time:t}}),prefer:"resolution=ignore-duplicates,return=minimal"})}
+// ===== START =====
+window.addEventListener("hashchange",function(){if(location.hash=="#barber"){tok?barberLoad():barberView()}else{render()}});
+if(location.hash=="#barber"){tok?barberLoad():barberView()}else{loadTaken().then(render);render()}
+</script>
+</body>
+</html>
