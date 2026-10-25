@@ -5,47 +5,153 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Precision Trimmers Barbershop</title>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#1c1c1c">
+<meta name="theme-color" content="#171715">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Trimmers">
 <style>
-:root{--bg:#faf7f2;--card:#fff;--ink:#1c1c1c;--mute:#6b6b6b;--line:#e4ded3;--acc:#c8862a;--accink:#fff}
-@media (prefers-color-scheme:dark){:root{--bg:#141414;--card:#1f1f1f;--ink:#f2efe9;--mute:#9a9a9a;--line:#333;--acc:#e0a040;--accink:#141414}}
+:root{
+  color-scheme:dark;
+  --bg:#171715;
+  --card:#22221f;
+  --ink:#f4f0e7;
+  --mute:#b7b0a2;
+  --line:#403b30;
+  --acc:#c9a45c;
+  --accink:#171715;
+  --gold-soft:#e1c987;
+  --danger:#e07b72;
+  --success:#91c59a;
+}
 *{box-sizing:border-box}
-body{margin:0 auto;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;max-width:480px;padding:16px 16px 100px}
-h1{font-size:22px;margin:0}h2{font-size:18px;margin:18px 0 10px}
-.sub,.meta{color:var(--mute);font-size:14px}.meta{font-size:13px}
-.steps{display:flex;gap:6px;margin:12px 0 4px}.steps i{flex:1;height:4px;border-radius:2px;background:var(--line)}.steps i.on{background:var(--acc)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;display:flex;align-items:center;gap:12px;cursor:pointer;width:100%;text-align:left;color:var(--ink);font:inherit}
-.card.sel{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
-.ico{min-width:46px;height:46px;border-radius:12px;background:var(--line);display:grid;place-items:center;flex:none;font-size:15px;padding:0 4px}
-.grow{flex:1}.name{font-weight:600}.price{font-weight:700}
-.row{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;flex-wrap:wrap}
-.chip{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:10px 12px;text-align:center;font:inherit;cursor:pointer;min-width:62px}
-.chip.sel{background:var(--acc);color:var(--accink);border-color:var(--acc)}
+html{scroll-behavior:smooth}
+body{
+  margin:0 auto;
+  background:
+    radial-gradient(ellipse at top,rgba(201,164,92,.075),transparent 42%),
+    var(--bg);
+  color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  max-width:480px;
+  min-height:100vh;
+  padding:24px 16px 112px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+h1{font-size:25px;line-height:1.2;letter-spacing:-.035em;margin:0;font-weight:800}
+h2{font-size:18px;line-height:1.3;letter-spacing:-.015em;margin:24px 0 11px}
+p{line-height:1.55}
+.sub,.meta{color:var(--mute);font-size:14px}
+.sub{margin:8px 0 18px}
+.meta{font-size:13px}
+.launch-notice{
+  display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+  margin:18px 0 16px;padding:10px 12px;
+  border:1px solid rgba(201,164,92,.42);
+  border-radius:12px;background:rgba(201,164,92,.075);
+  color:var(--mute);font-size:12px;
+}
+.launch-notice strong{
+  color:var(--gold-soft);font-size:10px;letter-spacing:.12em;
+  white-space:nowrap;
+}
+.steps{display:flex;gap:6px;margin:16px 0 6px}
+.steps i{flex:1;height:4px;border-radius:99px;background:var(--line)}
+.steps i.on{background:var(--acc)}
+.card{
+  background:linear-gradient(145deg,rgba(255,255,255,.025),transparent 75%),var(--card);
+  border:1px solid var(--line);border-radius:16px;padding:14px;
+  margin-bottom:10px;display:flex;align-items:center;gap:12px;
+  cursor:pointer;width:100%;text-align:left;color:var(--ink);font:inherit;
+  transition:border-color .18s ease,transform .18s ease,box-shadow .18s ease;
+}
+.card:focus-visible,.chip:focus-visible,button:focus-visible,a:focus-visible,.in:focus-visible{
+  outline:2px solid var(--gold-soft);outline-offset:3px;
+}
+.card:active{transform:scale(.99)}
+.card.sel{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc),0 8px 24px rgba(0,0,0,.12)}
+.ico{
+  min-width:46px;height:46px;border-radius:13px;
+  background:rgba(201,164,92,.12);color:var(--gold-soft);
+  display:grid;place-items:center;flex:none;font-size:17px;padding:0 4px;
+  border:1px solid rgba(201,164,92,.12);
+}
+.grow{flex:1;min-width:0}.name{font-weight:650}
+.price{font-weight:800;color:var(--gold-soft);white-space:nowrap}
+.row{display:flex;gap:8px;overflow-x:auto;padding:3px 1px 8px;flex-wrap:wrap}
+.chip{
+  flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);
+  border-radius:12px;padding:10px 12px;text-align:center;font:inherit;cursor:pointer;
+  min-width:62px;transition:background .18s ease,border-color .18s ease;
+}
+.chip.sel{background:var(--acc);color:var(--accink);border-color:var(--acc);font-weight:700}
 .chip.off{opacity:.35;text-decoration:line-through;cursor:not-allowed}
-.scroll{flex-wrap:nowrap}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.bar{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:12px 16px;display:flex;gap:10px;max-width:480px;margin:0 auto}
+.scroll{flex-wrap:nowrap;scrollbar-width:thin}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.bar{
+  position:fixed;left:0;right:0;bottom:0;
+  background:rgba(23,23,21,.94);backdrop-filter:blur(16px);
+  border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  display:flex;gap:10px;max-width:480px;margin:0 auto;z-index:20;
+}
 .bar:empty{display:none}
-button.main{flex:1;background:var(--acc);color:var(--accink);border:0;border-radius:12px;padding:14px;font:inherit;font-weight:700;cursor:pointer}
-button.main:disabled{opacity:.4}
-button.ghost{background:none;border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:14px 16px;font:inherit;cursor:pointer}
-.sum{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;font-size:14px;margin-bottom:10px}
-.sum>div{display:flex;justify-content:space-between;padding:4px 0}
-.list{margin:8px 0 0;padding:0;list-style:none}.list li{padding:8px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:14px}
-.in{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:inherit;margin-bottom:8px}
-.err{color:#c0392b;font-size:13px;min-height:16px}.good{color:#2e7d32;font-size:13px}.note{font-size:12px;color:var(--mute);margin-top:10px;text-align:center}
-.ok{font-size:44px;text-align:center}a{color:var(--acc)}
-.btn{display:inline-block;text-decoration:none;padding:12px 18px;border-radius:12px;background:var(--acc);color:var(--accink);font-weight:700}
-.s{font-size:12px;padding:6px 10px;min-width:0;margin:2px}
+button.main{
+  flex:1;background:linear-gradient(135deg,#e0c27b,var(--acc));color:var(--accink);
+  border:0;border-radius:13px;padding:14px 16px;font:inherit;font-weight:800;
+  cursor:pointer;box-shadow:0 5px 16px rgba(201,164,92,.12);
+}
+button.main:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+button.ghost{
+  background:transparent;border:1px solid var(--line);color:var(--ink);
+  border-radius:13px;padding:14px 16px;font:inherit;cursor:pointer;
+}
+.sum{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:15px;font-size:14px;margin-bottom:12px;
+}
+.sum>div{display:flex;justify-content:space-between;gap:14px;padding:5px 0}
+.sum>div>span:last-child{text-align:right}
+.list{margin:8px 0 0;padding:0;list-style:none}
+.list li{padding:10px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;font-size:14px}
+.in{
+  width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:12px;
+  background:#1c1c19;color:var(--ink);font:inherit;margin-bottom:9px;
+}
+.in::placeholder{color:#898273}
+.err{color:var(--danger);font-size:13px;min-height:16px}
+.good{color:var(--success);font-size:13px}
+.note{font-size:12px;color:var(--mute);margin-top:20px;text-align:center}
+.ok{font-size:44px;text-align:center}
+a{color:var(--gold-soft)}
+.btn{
+  display:inline-block;text-decoration:none;padding:12px 18px;border-radius:12px;
+  background:var(--acc);color:var(--accink);font-weight:800;
+}
+.s{font-size:12px;padding:7px 10px;min-width:0;margin:2px}
 .cards{display:block}
-@media (min-width:800px){body{max-width:1100px;padding:28px 40px 110px}.bar{max-width:1100px;padding:12px 40px}h1{font-size:32px}h2{font-size:21px}
-.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.cards .card{margin-bottom:0}
-.grid{grid-template-columns:repeat(6,1fr)}.in{max-width:560px}.sum{max-width:700px}button.main{max-width:420px}}
-@media (min-width:1150px){.cards{grid-template-columns:repeat(3,1fr)}}
+#app>h1{margin-bottom:2px}
+#app .sum a{font-weight:650}
+button,a,input,select{-webkit-tap-highlight-color:transparent}
+@media (min-width:800px){
+  body{max-width:1100px;padding:36px 40px 120px}
+  .bar{max-width:1100px;padding:14px 40px}
+  h1{font-size:34px}
+  h2{font-size:21px;margin-top:28px}
+  .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .cards .card{margin-bottom:0}
+  .grid{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .in{max-width:560px}
+  .sum{max-width:760px}
+  button.main{max-width:420px}
+  #app>h1{margin-top:4px}
+}
+@media (min-width:1150px){
+  .cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;transition:none!important}
+}
 select.in{width:auto;margin:0}
 </style>
 </head>
@@ -58,7 +164,7 @@ var API="https://rmcluwrnuashlnkwcriv.supabase.co",KEY="sb_publishable_HKts_qYpX
 var SHOP="Precision Trimmers Barbershop",WA="27618404683",EMAIL="briantkays@gmail.com";
 var RATE=null; // put today's ZiG per 1 USD here to switch on the USD/ZiG button
 var DEF={open:8,close:18,slot:30,closed:[0],notice:"",address:"",loyalty:10,styles:[
-{n:"Low cut",p:1,i:"💈"},{n:"Brush cut",p:1,i:"🪮"},{n:"English cut",p:1,i:"✂️"},{n:"Fade",p:3,i:"💈"},{n:"Flat top",p:3,i:"📐"},{n:"Waves",p:3,i:"🌊"},{n:"Mohawk",p:3,i:"🦅"},{n:"Twists + fade",p:3,i:"🌀"},{n:"Dreads + fade",p:3,i:"〰️"},{n:"Design cut (lines)",p:3,i:"🎨"},{n:"Shape-up only",p:0.5,i:"📏"},{n:"Shape-up + beard",p:1,i:"🧔"},{n:"Beard only",p:1,i:"🧔"},{n:"Kids cut",p:1,i:"👦"},{n:"Kids design (Nike etc.)",p:2,i:"⭐"}]};
+{n:"Low cut",p:1,i:"ðŸ’ˆ"},{n:"Brush cut",p:1,i:"ðŸª®"},{n:"English cut",p:1,i:"âœ‚ï¸"},{n:"Fade",p:3,i:"ðŸ’ˆ"},{n:"Flat top",p:3,i:"ðŸ“"},{n:"Waves",p:3,i:"ðŸŒŠ"},{n:"Mohawk",p:3,i:"ðŸ¦…"},{n:"Twists + fade",p:3,i:"ðŸŒ€"},{n:"Dreads + fade",p:3,i:"ã€°ï¸"},{n:"Design cut (lines)",p:3,i:"ðŸŽ¨"},{n:"Shape-up only",p:0.5,i:"ðŸ“"},{n:"Shape-up + beard",p:1,i:"ðŸ§”"},{n:"Beard only",p:1,i:"ðŸ§”"},{n:"Kids cut",p:1,i:"ðŸ‘¦"},{n:"Kids design (Nike etc.)",p:2,i:"â­"}]};
 var CFG=JSON.parse(JSON.stringify(DEF)),T=[];
 var R=[{k:0,t:"Just once"},{k:1,t:"Every week"},{k:2,t:"Every 2 weeks"},{k:3,t:"Every 3 weeks"},{k:4,t:"Every 4 weeks"}];
 var PAY=["Cash","EcoCash","OneMoney"];
@@ -89,7 +195,7 @@ function steps(){var h="<div class='steps'>";for(var i=0;i<4;i++)h+="<i class='"
 function go(n){st.step=n;err="";render();scrollTo(0,0)}
 function pickS(i){st.s=i;render()}function pickD(i){st.d=i;st.t=null;render()}function pickT(i){st.t=T[i];render()}
 function pickR(i){st.r=i;render()}function pickC(n){st.c=n;render()}function pickP(i){st.pay=PAY[i];err="";render()}
-function cut(){return(RATE?"<div style='text-align:right'><button class='chip s' onclick=\"cur=cur=='USD'?'ZiG':'USD';render()\">Prices in "+cur+" ⇄</button></div>":"")}
+function cut(){return(RATE?"<div style='text-align:right'><button class='chip s' onclick=\"cur=cur=='USD'?'ZiG':'USD';render()\">Prices in "+cur+" â‡„</button></div>":"")}
 function ord(n){var j=n%10,k=n%100;return n+(j==1&&k!=11?"st":j==2&&k!=12?"nd":j==3&&k!=13?"rd":"th")}
 function infoBox(){var h="";if(CFG.notice)h+="<div class='sum' style='background:var(--acc);color:var(--accink);border-color:var(--acc)'><b>"+esc(CFG.notice)+"</b></div>";
 h+="<div class='sum'><div><span>Open</span><span>"+pad(CFG.open)+":00 to "+pad(CFG.close)+":00</span></div><div><span></span><span class='meta'>"+closedText()+"</span></div>"+(CFG.address?"<div><span>Where</span><span>"+esc(CFG.address)+"</span></div>":"")+(CFG.loyalty>0?"<div><span>Loyalty</span><span>Every "+ord(CFG.loyalty)+" cut is free</span></div>":"")+"<div><span>Questions?</span><a href='https://wa.me/"+WA+"' target='_blank'>Chat on WhatsApp</a></div></div>";return h}
@@ -98,21 +204,21 @@ window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();dp=
 function render(){
 if(location.hash=="#barber"){return barberView()}
 var a=$("app"),b=$("bar"),h="",L=ST();
-if(st.step==0){h="<h1>"+SHOP+"</h1><p class='sub'>Book your cut in under a minute</p>"+infoBox()+cut()+steps()+"<h2>Choose your style</h2><div class='cards'>"+L.map(function(s,i){return "<button class='card"+(st.s===i?" sel":"")+"' onclick='pickS("+i+")'><div class='ico'>"+esc(s.i||"✂️")+"</div><div class='grow name'>"+esc(s.n)+"</div><div class='price'>"+M(s.p)+"</div></button>"}).join("")+"</div>";
+if(st.step==0){h="<h1>"+SHOP+"</h1><p class='launch-notice'><strong>PREPARING FOR LAUNCH</strong><span>Bookings are open for testing.</span></p><p class='sub'>Book your cut in under a minute</p>"+infoBox()+cut()+steps()+"<h2>Choose your style</h2><div class='cards'>"+L.map(function(s,i){return "<button class='card"+(st.s===i?" sel":"")+"' onclick='pickS("+i+")'><div class='ico'>"+esc(s.i||"âœ‚ï¸")+"</div><div class='grow name'>"+esc(s.n)+"</div><div class='price'>"+M(s.p)+"</div></button>"}).join("")+"</div>";
 b.innerHTML="<button class='main' "+(st.s===null||!L[st.s]?"disabled":"")+" onclick='go(1)'>Next: pick a time</button>"}
 if(st.step==1){var c=conflicts();
-h=steps()+"<h2>Pick a day</h2><div class='row scroll'>"+[1,2,3,4,5,6,7,8,9,10,11,12,13,14].map(function(i){var x=addDays(today(),i),off=isClosed(x);return "<button class='chip"+(st.d==i?" sel":"")+(off?" off":"")+"' "+(off?"":"onclick='pickD("+i+")'")+">"+DN[x.getDay()]+"<br><b>"+x.getDate()+"</b><br>"+MN[x.getMonth()]+"</button>"}).join("")+"</div><p class='meta'>"+closedText()+"</p><h2>Time</h2>"+(offline?"<p class='err'>Can’t load times. Check your internet and refresh.</p>":"")+"<div class='grid'>"+T.map(function(t,i){var o=busy[iso(addDays(today(),st.d))+"|"+t];return "<button class='chip"+(st.t==t?" sel":"")+(o?" off":"")+"' "+(o?"":"onclick='pickT("+i+")'")+">"+t+"</button>"}).join("")+"</div>"+
+h=steps()+"<h2>Pick a day</h2><div class='row scroll'>"+[1,2,3,4,5,6,7,8,9,10,11,12,13,14].map(function(i){var x=addDays(today(),i),off=isClosed(x);return "<button class='chip"+(st.d==i?" sel":"")+(off?" off":"")+"' "+(off?"":"onclick='pickD("+i+")'")+">"+DN[x.getDay()]+"<br><b>"+x.getDate()+"</b><br>"+MN[x.getMonth()]+"</button>"}).join("")+"</div><p class='meta'>"+closedText()+"</p><h2>Time</h2>"+(offline?"<p class='err'>Canâ€™t load times. Check your internet and refresh.</p>":"")+"<div class='grid'>"+T.map(function(t,i){var o=busy[iso(addDays(today(),st.d))+"|"+t];return "<button class='chip"+(st.t==t?" sel":"")+(o?" off":"")+"' "+(o?"":"onclick='pickT("+i+")'")+">"+t+"</button>"}).join("")+"</div>"+
 "<h2>Do you cut on a timetable?</h2><p class='sub'>Regulars: lock in your next cuts so your slot is always yours.</p><div class='row'>"+R.map(function(r,i){return "<button class='chip"+(st.r==i?" sel":"")+"' onclick='pickR("+i+")'>"+r.t+"</button>"}).join("")+"</div>"+
 (st.r?"<h2>How many cuts to book?</h2><div class='row'>"+[2,4,6,8].map(function(n){return "<button class='chip"+(st.c==n?" sel":"")+"' onclick='pickC("+n+")'>"+n+" cuts</button>"}).join("")+"</div>":"");
-if(st.t){h+="<h2>Your schedule</h2><div class='sum'><ul class='list' style='margin:0'>"+dates().map(function(x,i){var bad=busy[iso(x)+"|"+st.t];return "<li><span>"+(i+1)+". "+fmt(x)+"</span><span>"+st.t+(bad?" ⚠ taken":"")+"</span></li>"}).join("")+"</ul></div>"+(c.length?"<p class='err'>One of these dates is already taken. Pick another time or fewer cuts.</p>":"")}
+if(st.t){h+="<h2>Your schedule</h2><div class='sum'><ul class='list' style='margin:0'>"+dates().map(function(x,i){var bad=busy[iso(x)+"|"+st.t];return "<li><span>"+(i+1)+". "+fmt(x)+"</span><span>"+st.t+(bad?" âš  taken":"")+"</span></li>"}).join("")+"</ul></div>"+(c.length?"<p class='err'>One of these dates is already taken. Pick another time or fewer cuts.</p>":"")}
 b.innerHTML="<button class='ghost' onclick='go(0)'>Back</button><button class='main' "+(st.t&&!c.length?"":"disabled")+" onclick='go(2)'>Next: your details</button>"}
 if(st.step==2){var n=dates().length,s=L[st.s];
-h=steps()+"<h2>Confirm your booking</h2><div class='sum'><div><span>"+esc(s.n)+"</span><span>"+M(s.p)+" × "+n+"</span></div><div><span>Total (paid at the shop)</span><b>"+M(s.p*n)+"</b></div></div><h2>Your details</h2><input class='in' id='nm' placeholder='Your name' value='"+esc(nm)+"' oninput='nm=this.value'><input class='in' id='ph' type='tel' placeholder='WhatsApp number with country code, e.g. 263771234567' value='"+esc(ph)+"' oninput='ph=this.value'><h2>How will you pay after your cut?</h2><div class='cards'>"+PAY.map(function(p,i){return "<button class='card"+(st.pay==p?" sel":"")+"' onclick='pickP("+i+")'><div class='ico'>"+(p=="Cash"?"💵":"📱")+"</div><div class='grow name'>"+p+"</div></button>"}).join("")+"</div><p class='meta'>You pay at the shop after your cut. Nothing is charged online.</p><p class='err'>"+err+"</p>";
-b.innerHTML="<button class='ghost' onclick='go(1)'>Back</button><button class='main' "+(sending?"disabled":"")+" onclick='book()'>"+(sending?"Booking…":"Confirm booking")+"</button>"}
+h=steps()+"<h2>Confirm your booking</h2><div class='sum'><div><span>"+esc(s.n)+"</span><span>"+M(s.p)+" Ã— "+n+"</span></div><div><span>Total (paid at the shop)</span><b>"+M(s.p*n)+"</b></div></div><h2>Your details</h2><input class='in' id='nm' placeholder='Your name' value='"+esc(nm)+"' oninput='nm=this.value'><input class='in' id='ph' type='tel' placeholder='WhatsApp number with country code, e.g. 263771234567' value='"+esc(ph)+"' oninput='ph=this.value'><h2>How will you pay after your cut?</h2><div class='cards'>"+PAY.map(function(p,i){return "<button class='card"+(st.pay==p?" sel":"")+"' onclick='pickP("+i+")'><div class='ico'>"+(p=="Cash"?"ðŸ’µ":"ðŸ“±")+"</div><div class='grow name'>"+p+"</div></button>"}).join("")+"</div><p class='meta'>You pay at the shop after your cut. Nothing is charged online.</p><p class='err'>"+err+"</p>";
+b.innerHTML="<button class='ghost' onclick='go(1)'>Back</button><button class='main' "+(sending?"disabled":"")+" onclick='book()'>"+(sending?"Bookingâ€¦":"Confirm booking")+"</button>"}
 if(st.step==3){var s=L[st.s],ds=dates();
-h=steps()+"<div class='ok'>✅</div><h1 style='text-align:center'>You’re booked"+(nm?", "+esc(nm.split(" ")[0]):"")+"!</h1><p class='sub' style='text-align:center'>"+esc(s.n)+" · pay "+st.pay+" at the shop · Ref "+ref+"</p><div class='sum'><b>Your cuts</b><ul class='list'>"+ds.map(function(x){return "<li><span>"+fmt(x)+"</span><span>"+st.t+"</span></li>"}).join("")+"</ul></div><p style='text-align:center;margin-top:16px'><a class='btn' target='_blank' href='"+waUrl()+"'>Send to the shop on WhatsApp</a></p><p class='note'>Opening WhatsApp so the shop gets your booking… If it doesn’t open, tap the green button.</p>";
+h=steps()+"<div class='ok'>âœ…</div><h1 style='text-align:center'>Youâ€™re booked"+(nm?", "+esc(nm.split(" ")[0]):"")+"!</h1><p class='sub' style='text-align:center'>"+esc(s.n)+" Â· pay "+st.pay+" at the shop Â· Ref "+ref+"</p><div class='sum'><b>Your cuts</b><ul class='list'>"+ds.map(function(x){return "<li><span>"+fmt(x)+"</span><span>"+st.t+"</span></li>"}).join("")+"</ul></div><p style='text-align:center;margin-top:16px'><a class='btn' target='_blank' href='"+waUrl()+"'>Send to the shop on WhatsApp</a></p><p class='note'>Opening WhatsApp so the shop gets your bookingâ€¦ If it doesnâ€™t open, tap the green button.</p>";
 b.innerHTML="<button class='main' onclick='st={step:0,s:null,d:1,t:null,r:2,c:4,pay:null};render()'>Book another</button>"}
-a.innerHTML=h+"<p class='note'>"+(dp?"<a href='#' onclick='return inst()'>📲 Add this app to your home screen</a> · ":"")+"<a href='#barber'>Barber login</a></p>"}
+a.innerHTML=h+"<p class='note'>"+(dp?"<a href='#' onclick='return inst()'>ðŸ“² Add this app to your home screen</a> Â· ":"")+"<a href='#barber'>Barber login</a></p>"}
 function waUrl(){var s=ST()[st.s],ds=dates();return "https://wa.me/"+WA+"?text="+encodeURIComponent("Hi, I booked at "+SHOP+": "+s.n+"\n"+ds.map(function(x){return fmt(x)+" "+st.t}).join("\n")+"\nName: "+nm+"\nRef "+ref)}
 async function book(){err="";var p=ph.replace(/[ \-()]/g,"");
 if(!nm.trim()){err="Please enter your name.";return render()}
@@ -134,7 +240,7 @@ if(r1.status==401||r2.status==401){err="Session ended. Log in again.";return log
 bk=await r1.json();bl=await r2.json();ba=r3.ok?await r3.json():[];lc={};var ps=[];bk.forEach(function(x){if(waOk(x.phone)&&ps.indexOf(x.phone)<0)ps.push(x.phone)});
 if(CFG.loyalty>0&&ps.length){var r4=await api("/rest/v1/bookings?select=phone&status=eq.booked&paid=eq.true&phone=in.("+ps.join(",")+")&limit=1000");if(r4.ok)(await r4.json()).forEach(function(x){lc[x.phone]=(lc[x.phone]||0)+1})}}catch(e){bk=[];bl=[];ba=[];err="No internet."}barberView()}
 function freeDue(x){return CFG.loyalty>0&&waOk(x.phone)&&!x.paid&&((lc[x.phone]||0)+1)%CFG.loyalty==0}
-function loyTag(x){if(!CFG.loyalty||!waOk(x.phone)||x.paid)return "";if(freeDue(x))return " · 🎁 FREE cut due ("+ord(CFG.loyalty)+")";var c=lc[x.phone]||0;return " · "+c+" paid cut"+(c==1?"":"s")}
+function loyTag(x){if(!CFG.loyalty||!waOk(x.phone)||x.paid)return "";if(freeDue(x))return " Â· ðŸŽ FREE cut due ("+ord(CFG.loyalty)+")";var c=lc[x.phone]||0;return " Â· "+c+" paid cut"+(c==1?"":"s")}
 function freeBtn(x){return freeDue(x)?"<button class='chip s' onclick=\"freeCut('"+x.id+"')\">Give free cut</button>":""}
 function freeCut(id){if(confirm("Give this client their free cut? It is marked paid at $0."))act("/rest/v1/bookings?id=eq."+id,{m:"PATCH",b:{price:0,paid:true},prefer:"return=minimal"})}
 function tabs(){var X=[["day","Bookings","barberLoad()"],["earn","Earnings","earnLoad()"],["due","Due back","dueLoad()"],["set","Settings","ed=JSON.parse(JSON.stringify(CFG));msg='';barberView()"]];return "<div class='row' style='margin:8px 0'>"+X.map(function(t){return "<button class='chip"+(bv==t[0]?" sel":"")+"' onclick=\"bv='"+t[0]+"';err='';"+t[2]+"\">"+t[1]+"</button>"}).join("")+"</div>"}
@@ -146,11 +252,11 @@ if(!tok){a.innerHTML="<h1>Barber login</h1><p class='sub'>"+SHOP+"</p><input cla
 if(bv=="set")return settingsView();if(bv=="earn")return earnView();if(bv=="due")return dueView();
 var L=ST(),exp=0,col=0;bk.forEach(function(x){exp+=+x.price;if(x.paid)col+=+x.price});
 var by={};bk.forEach(function(x){by[String(x.slot_time).slice(0,5)]=x});var bb={};bl.forEach(function(x){bb[String(x.slot_time).slice(0,5)]=x});
-var panel="";if(wsel){panel="<div class='sum'><b>Add a client at "+wsel+"</b><p><input class='in' id='wn' placeholder='Client name'><select class='in' id='ws' style='width:100%;margin-bottom:8px'>"+L.map(function(s,i){return "<option value='"+i+"'>"+esc(s.n)+" · "+M(s.p)+"</option>"}).join("")+"</select><select class='in' id='wp' style='width:100%;margin-bottom:8px'>"+PAY.map(function(p){return "<option>"+p+"</option>"}).join("")+"</select><input class='in' id='wph' type='tel' placeholder='WhatsApp number with country code (optional)'><label class='meta'><input type='checkbox' id='wpd'> Already paid</label></p><button class='chip s' onclick='addWalk()'>Add booking</button><button class='chip s' onclick=\"blockT('"+wsel+"')\">Block this time</button><button class='chip s' onclick='wsel=null;barberView()'>Cancel</button></div>"}
-a.innerHTML="<h1>Bookings</h1>"+tabs()+"<div style='display:flex;align-items:center;gap:6px;margin:10px 0'><button class='chip s' onclick='nav(-1)'>‹</button><b class='grow' style='text-align:center'>"+fmt(bd)+(iso(bd)==iso(today())?" (today)":"")+"</b><button class='chip s' onclick='nav(1)'>›</button></div><div class='row'><button class='chip s' onclick='bd=today();wsel=null;barberLoad()'>Today</button><button class='chip s' onclick='bd=addDays(today(),1);wsel=null;barberLoad()'>Tomorrow (reminders)</button></div>"+
+var panel="";if(wsel){panel="<div class='sum'><b>Add a client at "+wsel+"</b><p><input class='in' id='wn' placeholder='Client name'><select class='in' id='ws' style='width:100%;margin-bottom:8px'>"+L.map(function(s,i){return "<option value='"+i+"'>"+esc(s.n)+" Â· "+M(s.p)+"</option>"}).join("")+"</select><select class='in' id='wp' style='width:100%;margin-bottom:8px'>"+PAY.map(function(p){return "<option>"+p+"</option>"}).join("")+"</select><input class='in' id='wph' type='tel' placeholder='WhatsApp number with country code (optional)'><label class='meta'><input type='checkbox' id='wpd'> Already paid</label></p><button class='chip s' onclick='addWalk()'>Add booking</button><button class='chip s' onclick=\"blockT('"+wsel+"')\">Block this time</button><button class='chip s' onclick='wsel=null;barberView()'>Cancel</button></div>"}
+a.innerHTML="<h1>Bookings</h1>"+tabs()+"<div style='display:flex;align-items:center;gap:6px;margin:10px 0'><button class='chip s' onclick='nav(-1)'>â€¹</button><b class='grow' style='text-align:center'>"+fmt(bd)+(iso(bd)==iso(today())?" (today)":"")+"</b><button class='chip s' onclick='nav(1)'>â€º</button></div><div class='row'><button class='chip s' onclick='bd=today();wsel=null;barberLoad()'>Today</button><button class='chip s' onclick='bd=addDays(today(),1);wsel=null;barberLoad()'>Tomorrow (reminders)</button></div>"+
 "<div class='sum' style='margin-top:8px'><div><span>Clients</span><b>"+bk.length+"</b></div><div><span>Expected</span><b>$"+exp.toFixed(2)+"</b></div><div><span>Marked paid</span><b>$"+col.toFixed(2)+"</b></div></div><p class='err'>"+err+"</p>"+
-(bk.length?"":"<p class='sub'>No bookings this day.</p>")+"<div class='cards'>"+bk.map(function(x){return "<div class='card' style='cursor:default;flex-wrap:wrap'><div class='ico'>"+esc(String(x.slot_time).slice(0,5))+"</div><div class='grow'><div class='name'>"+esc(x.name)+"</div><div class='meta'>"+esc(x.style)+" · $"+(+x.price).toFixed(2)+" · "+esc(x.pay)+(x.series?" · regular":"")+loyTag(x)+"</div></div><div>"+(x.paid?"✅ paid":"")+"</div><div style='width:100%'>"+(x.paid?"":"<button class='chip s' onclick=\"paid('"+x.id+"')\">Mark paid</button>")+freeBtn(x)+(waOk(x.phone)?"<a class='chip s' style='display:inline-block;text-decoration:none' target='_blank' href='"+esc(remind(x))+"'>WhatsApp reminder</a>":"")+"<button class='chip s' onclick=\"cancelB('"+x.id+"')\">Cancel</button></div></div>"}).join("")+"</div>"+
-"<h2>Add a client or block a time</h2><p class='meta'>Tap a free time to add a walk-in or phone booking, or to block it. Tap a blocked time to open it again.</p>"+panel+"<div class='grid'>"+T.map(function(t){return by[t]?"<button class='chip off' disabled>"+t+"</button>":bb[t]?"<button class='chip sel' onclick=\"unblock('"+bb[t].id+"')\">"+t+" ✕</button>":"<button class='chip"+(wsel==t?" sel":"")+"' onclick=\"wsel='"+t+"';barberView()\">"+t+"</button>"}).join("")+"</div><p style='margin-top:12px'><button class='ghost' onclick='blockDay()'>Block whole day</button> "+(bl.length?"<button class='ghost' onclick=\"openDay('"+iso(bd)+"')\">Open whole day</button>":"")+"</p>"+blockedList()+"<p><button class='ghost' onclick='logout()'>Log out</button></p><p class='note'><a href='#' onclick=\"location.hash='';return true\">Open client booking page</a></p>"}
+(bk.length?"":"<p class='sub'>No bookings this day.</p>")+"<div class='cards'>"+bk.map(function(x){return "<div class='card' style='cursor:default;flex-wrap:wrap'><div class='ico'>"+esc(String(x.slot_time).slice(0,5))+"</div><div class='grow'><div class='name'>"+esc(x.name)+"</div><div class='meta'>"+esc(x.style)+" Â· $"+(+x.price).toFixed(2)+" Â· "+esc(x.pay)+(x.series?" Â· regular":"")+loyTag(x)+"</div></div><div>"+(x.paid?"âœ… paid":"")+"</div><div style='width:100%'>"+(x.paid?"":"<button class='chip s' onclick=\"paid('"+x.id+"')\">Mark paid</button>")+freeBtn(x)+(waOk(x.phone)?"<a class='chip s' style='display:inline-block;text-decoration:none' target='_blank' href='"+esc(remind(x))+"'>WhatsApp reminder</a>":"")+"<button class='chip s' onclick=\"cancelB('"+x.id+"')\">Cancel</button></div></div>"}).join("")+"</div>"+
+"<h2>Add a client or block a time</h2><p class='meta'>Tap a free time to add a walk-in or phone booking, or to block it. Tap a blocked time to open it again.</p>"+panel+"<div class='grid'>"+T.map(function(t){return by[t]?"<button class='chip off' disabled>"+t+"</button>":bb[t]?"<button class='chip sel' onclick=\"unblock('"+bb[t].id+"')\">"+t+" âœ•</button>":"<button class='chip"+(wsel==t?" sel":"")+"' onclick=\"wsel='"+t+"';barberView()\">"+t+"</button>"}).join("")+"</div><p style='margin-top:12px'><button class='ghost' onclick='blockDay()'>Block whole day</button> "+(bl.length?"<button class='ghost' onclick=\"openDay('"+iso(bd)+"')\">Open whole day</button>":"")+"</p>"+blockedList()+"<p><button class='ghost' onclick='logout()'>Log out</button></p><p class='note'><a href='#' onclick=\"location.hash='';return true\">Open client booking page</a></p>"}
 function nav(n){bd=addDays(bd,n);wsel=null;barberLoad()}
 async function act(p,o){var r=await api(p,o);if(r.status==401){err="Session ended. Log in again.";return logout()}if(r.status==409){err="That time was just taken."}else if(!r.ok)err="Something went wrong. Try again.";wsel=null;barberLoad()}
 function paid(id){act("/rest/v1/bookings?id=eq."+id,{m:"PATCH",b:{paid:true},prefer:"return=minimal"})}
@@ -165,7 +271,7 @@ function gotoDay(k){bd=new Date(k+"T00:00:00");wsel=null;barberLoad()}
 function blockedList(){var g={},ks=[];ba.forEach(function(x){if(!g[x.slot_date]){g[x.slot_date]=0;ks.push(x.slot_date)}g[x.slot_date]++});
 if(!ks.length)return "<h2>Blocked days</h2><p class='meta'>Nothing is blocked.</p>";
 return "<h2>Blocked days</h2><p class='meta'>Every day that has blocked times, from today on.</p>"+ks.map(function(k){return "<div class='card' style='cursor:default;flex-wrap:wrap'><div class='grow'><div class='name'>"+fmt(new Date(k+"T00:00:00"))+"</div><div class='meta'>"+g[k]+" time"+(g[k]>1?"s":"")+" blocked"+(g[k]>=T.length?" (whole day)":"")+"</div></div><button class='chip s' onclick=\"gotoDay('"+k+"')\">View</button><button class='chip s' onclick=\"openDay('"+k+"')\">Open this day</button></div>"}).join("")}
-function addWalk(){var n=$("wn").value.trim();if(!n){err="Enter the client’s name.";return barberView()}
+function addWalk(){var n=$("wn").value.trim();if(!n){err="Enter the clientâ€™s name.";return barberView()}
 var s=ST()[+$("ws").value],p=$("wph").value.replace(/[ \-()+]/g,"");
 act("/rest/v1/bookings",{m:"POST",b:[{ref:"WI"+Math.floor(1000+Math.random()*9000),name:n,phone:waOk(p)?p:"walk-in",style:s.n,price:s.p,pay:$("wp").value,slot_date:iso(bd),slot_time:wsel,paid:$("wpd").checked}],prefer:"return=minimal"})}
 // ----- earnings -----
@@ -182,14 +288,14 @@ er.forEach(function(x){var p=+x.price,w=String(x.ref).indexOf("WI")==0?wi:lk;tot
 var top=Object.keys(by).sort(function(a,b){return by[b].n-by[a].n}).slice(0,5);
 var P=[["today","Today"],["week","This week"],["month","This month"],["last","Last month"]];
 a.innerHTML="<h1>Earnings</h1>"+tabs()+"<div class='row'>"+P.map(function(p){return "<button class='chip s"+(per==p[0]?" sel":"")+"' onclick=\"setPer('"+p[0]+"')\">"+p[1]+"</button>"}).join("")+"</div><p class='meta'>"+fmt(r[0])+(iso(r[0])==iso(r[1])?"":" to "+fmt(r[1]))+"</p><p class='err'>"+err+"</p>"+
-"<div class='sum'><div><span>Collected (marked paid)</span><b>"+money(col)+"</b></div><div><span>Still to collect</span><b>"+money(tot-col)+"</b></div><div><span>Total booked</span><b>"+money(tot)+"</b></div><div><span>Expenses</span><b>"+money(expT)+"</b></div><div><span>Profit (collected − expenses)</span><b>"+money(col-expT)+"</b></div></div>"+
-(late?"<p class='err'>⚠ "+late+" past booking"+(late>1?"s aren’t":" isn’t")+" marked paid. Mark them paid in the Bookings tab so this stays right.</p>":"")+
+"<div class='sum'><div><span>Collected (marked paid)</span><b>"+money(col)+"</b></div><div><span>Still to collect</span><b>"+money(tot-col)+"</b></div><div><span>Total booked</span><b>"+money(tot)+"</b></div><div><span>Expenses</span><b>"+money(expT)+"</b></div><div><span>Profit (collected âˆ’ expenses)</span><b>"+money(col-expT)+"</b></div></div>"+
+(late?"<p class='err'>âš  "+late+" past booking"+(late>1?"s arenâ€™t":" isnâ€™t")+" marked paid. Mark them paid in the Bookings tab so this stays right.</p>":"")+
 "<h2>From your booking link</h2><div class='sum'><div><span>Bookings</span><b>"+lk.n+"</b></div><div><span>Collected</span><b>"+money(lk.c)+"</b></div><div><span>Total booked</span><b>"+money(lk.t)+"</b></div></div>"+
 "<h2>Walk-ins you added</h2><div class='sum'><div><span>Bookings</span><b>"+wi.n+"</b></div><div><span>Collected</span><b>"+money(wi.c)+"</b></div></div>"+
 "<h2>Collected by payment method</h2><div class='sum'>"+(Object.keys(pm).length?Object.keys(pm).map(function(k){return "<div><span>"+esc(k)+"</span><b>"+money(pm[k])+"</b></div>"}).join(""):"<span class='meta'>Nothing marked paid yet.</span>")+"</div>"+
-"<h2>Most booked cuts</h2><div class='sum'>"+(top.length?top.map(function(k){return "<div><span>"+esc(k)+"</span><span>"+by[k].n+" · "+money(by[k].t)+"</span></div>"}).join(""):"<span class='meta'>No bookings in this period.</span>")+"</div>"+
+"<h2>Most booked cuts</h2><div class='sum'>"+(top.length?top.map(function(k){return "<div><span>"+esc(k)+"</span><span>"+by[k].n+" Â· "+money(by[k].t)+"</span></div>"}).join(""):"<span class='meta'>No bookings in this period.</span>")+"</div>"+
 "<div class='sum'><div><span>Different clients</span><b>"+Object.keys(ph).length+"</b></div><div><span>Regular (timetable) bookings</span><b>"+reg+"</b></div></div>"+
-"<h2>Expenses</h2>"+(exOk?"<div class='row'><input class='in' id='xi' placeholder='What for? (blades, clippers, rent…)' style='flex:2 1 200px'><input class='in' id='xa' type='number' step='0.5' min='0' placeholder='Amount $' style='flex:1 1 100px;max-width:160px'><button class='chip s' onclick='addExp()'>Add</button></div><div class='sum'>"+(ex.length?ex.map(function(e){return "<div><span>"+fmt(new Date(e.spent_on+"T00:00:00"))+" · "+esc(e.item)+"</span><span>"+money(+e.amount)+" <button class='chip s' onclick=\"delExp('"+e.id+"')\">✕</button></span></div>"}).join(""):"<span class='meta'>No expenses in this period.</span>")+"</div>":"<p class='err'>Expenses need the new database step. Run the new SQL, then reload.</p>")+
+"<h2>Expenses</h2>"+(exOk?"<div class='row'><input class='in' id='xi' placeholder='What for? (blades, clippers, rentâ€¦)' style='flex:2 1 200px'><input class='in' id='xa' type='number' step='0.5' min='0' placeholder='Amount $' style='flex:1 1 100px;max-width:160px'><button class='chip s' onclick='addExp()'>Add</button></div><div class='sum'>"+(ex.length?ex.map(function(e){return "<div><span>"+fmt(new Date(e.spent_on+"T00:00:00"))+" Â· "+esc(e.item)+"</span><span>"+money(+e.amount)+" <button class='chip s' onclick=\"delExp('"+e.id+"')\">âœ•</button></span></div>"}).join(""):"<span class='meta'>No expenses in this period.</span>")+"</div>":"<p class='err'>Expenses need the new database step. Run the new SQL, then reload.</p>")+
 "<p class='note'>Bookings are counted by appointment date. Money counts as collected only after you tap Mark paid.</p>"}
 // ----- due back -----
 var due=[];
@@ -200,7 +306,7 @@ due=[];Object.keys(g).forEach(function(k){var o=g[k];if(o.future||!o.past.length
 if(ds.length>1){var sum=0;for(var i=1;i<ds.length;i++)sum+=(ds[i]-ds[i-1])/864e5;gap=Math.max(7,Math.round(sum/(ds.length-1)))}
 if(since>gap*1.15)due.push({o:o,since:since,gap:gap,over:since-gap})});due.sort(function(a,b){return b.over-a.over})}catch(e){due=[];err="No internet."}dueView()}
 function dueView(){var a=$("app");$("bar").innerHTML="";var link=location.href.split("#")[0];
-a.innerHTML="<h1>Due back</h1>"+tabs()+"<p class='meta'>Clients who haven’t booked their next cut and are later than usual. Clients with a future booking are left out.</p><p class='err'>"+err+"</p>"+(due.length?"<div class='cards'>"+due.slice(0,40).map(function(d){return "<div class='card' style='cursor:default;flex-wrap:wrap'><div class='grow'><div class='name'>"+esc(d.o.name)+"</div><div class='meta'>Last cut "+d.since+" days ago · usually every "+d.gap+" days</div></div><a class='chip s' style='text-decoration:none' target='_blank' href='https://wa.me/"+d.o.phone+"?text="+encodeURIComponent("Hi "+d.o.name.split(" ")[0]+", it’s been a while since your last cut at "+SHOP+". Book your next one here: "+link)+"'>WhatsApp them</a></div>"}).join("")+"</div>":"<p class='sub'>Nobody is overdue right now.</p>")}
+a.innerHTML="<h1>Due back</h1>"+tabs()+"<p class='meta'>Clients who havenâ€™t booked their next cut and are later than usual. Clients with a future booking are left out.</p><p class='err'>"+err+"</p>"+(due.length?"<div class='cards'>"+due.slice(0,40).map(function(d){return "<div class='card' style='cursor:default;flex-wrap:wrap'><div class='grow'><div class='name'>"+esc(d.o.name)+"</div><div class='meta'>Last cut "+d.since+" days ago Â· usually every "+d.gap+" days</div></div><a class='chip s' style='text-decoration:none' target='_blank' href='https://wa.me/"+d.o.phone+"?text="+encodeURIComponent("Hi "+d.o.name.split(" ")[0]+", itâ€™s been a while since your last cut at "+SHOP+". Book your next one here: "+link)+"'>WhatsApp them</a></div>"}).join("")+"</div>":"<p class='sub'>Nobody is overdue right now.</p>")}
 // ----- export -----
 async function exportCsv(kind){var rows=[],off=0;try{while(true){var r=await api("/rest/v1/"+kind+"?select=*&order=created_at&limit=1000&offset="+off);if(r.status==401){err="Session ended. Log in again.";return logout()}if(!r.ok)throw 0;var j=await r.json();rows=rows.concat(j);if(j.length<1000)break;off+=1000}}catch(e){err="Could not download. Check your internet.";return barberView()}
 if(!rows.length){err="Nothing to download yet.";return barberView()}
@@ -211,7 +317,7 @@ var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{typ
 function opt(a,v){return a.map(function(x){return "<option value='"+x+"'"+(x==v?" selected":"")+">"+x+"</option>"}).join("")}
 function edN(i,v){ed.styles[i].n=v}function edP(i,v){ed.styles[i].p=+v}function edA(i,v){ed.styles[i].a=v}
 function edD(i){ed.styles.splice(i,1);settingsView()}
-function edAdd(){ed.styles.push({n:"New cut",p:1,i:"✂️"});settingsView()}
+function edAdd(){ed.styles.push({n:"New cut",p:1,i:"âœ‚ï¸"});settingsView()}
 function edC(d,v){var k=ed.closed.indexOf(d);if(v&&k<0)ed.closed.push(d);if(!v&&k>-1)ed.closed.splice(k,1)}
 function settingsView(){var a=$("app");
 a.innerHTML="<h1>Settings</h1>"+tabs()+"<h2>Cuts and prices (USD)</h2><div class='cards'>"+ed.styles.map(function(s,i){return "<div class='card' style='cursor:default;flex-wrap:wrap'><input class='in' style='flex:1 1 150px;margin:0;width:auto' value='"+esc(s.n)+"' onchange='edN("+i+",this.value)'><input class='in' style='width:84px;margin:0' type='number' step='0.5' min='0' value='"+s.p+"' onchange='edP("+i+",this.value)'><label class='meta'><input type='checkbox' "+(s.a===false?"":"checked")+" onchange='edA("+i+",this.checked)'> show</label><button class='chip s' onclick='edD("+i+")'>Remove</button></div>"}).join("")+"</div><button class='ghost' style='margin-top:10px' onclick='edAdd()'>+ Add a cut</button>"+
@@ -224,7 +330,7 @@ for(var i=0;i<ed.styles.length;i++){var s=ed.styles[i];s.n=String(s.n).trim();if
 try{var r=await api("/rest/v1/settings",{m:"POST",b:{id:1,data:ed},prefer:"resolution=merge-duplicates,return=minimal"});
 if(r.status==401){err="Session ended. Log in again.";return logout()}
 if(!r.ok){err="Could not save. Did you run the new database step?";return settingsView()}
-CFG=JSON.parse(JSON.stringify(ed));buildT();msg="Saved ✅ Clients will see the changes now."}catch(e){err="No internet."}settingsView()}
+CFG=JSON.parse(JSON.stringify(ed));buildT();msg="Saved âœ… Clients will see the changes now."}catch(e){err="No internet."}settingsView()}
 // ===== START =====
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}
 window.addEventListener("hashchange",function(){if(location.hash=="#barber"){tok?barberLoad():barberView()}else{render()}});
